@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react"
 const navItems = [
   { name: "Inicio", href: "#inicio" },
   { name: "Servicios", href: "#servicios" },
+  { name: "Galería", href: "#galeria" },
   { name: "Horarios", href: "#horarios" },
   { name: "Ubicación", href: "#ubicacion" },
   { name: "Contacto", href: "https://wa.me/50582771968?text=Hola,%20quiero%20agendar%20una%20cita%20en%20Barbería%20Lacayo", external: true },
