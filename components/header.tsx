@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
+import Image from "next/image"
 
 const navItems = [
   { name: "Inicio", href: "#inicio" },
@@ -32,7 +33,14 @@ export function Header() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
-          <a href="#inicio" className="flex items-center gap-2">
+          <a href="#inicio" className="flex items-center gap-3">
+            <Image
+              src="/images/logo.png"
+              alt="Barbería Lacayo"
+              width={50}
+              height={50}
+              className="object-contain"
+            />
             <span className="font-serif text-2xl font-semibold text-primary tracking-wide">
               LACAYO
             </span>

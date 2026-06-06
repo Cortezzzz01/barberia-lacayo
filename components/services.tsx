@@ -5,20 +5,20 @@ const services = [
     name: "Corte Adulto",
     description: "Corte de cabello profesional con técnicas modernas y clásicas. Incluye degradado y acabado con navaja.",
     price: "C$ 250",
-    image: "/images/service-corte.jpg",
+    image: "/images/service-corte.jpeg",
     note: "Estilos especiales tienen costo extra"
   },
   {
     name: "Barba Profesional",
     description: "Perfilado y arreglo de barba con técnicas profesionales. Incluye toalla caliente y acabado impecable.",
     price: "C$ 200",
-    image: "/images/service-barba.jpg",
+    image: "/images/service-barba.jpeg",
   },
   {
     name: "Corte + Barba",
     description: "Servicio completo que incluye corte de cabello y perfilado profesional de barba. La mejor experiencia.",
     price: "C$ 380",
-    image: "/images/service-estilo.jpg",
+    image: "/images/service-estilo.jpeg",
   },
 ]
 
