@@ -1,7 +1,10 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Star } from "lucide-react"
 import { Button } from "./ui/button"
+import { SimpleReviewForm } from "./simple-review-form"
+import { Review } from "@/lib/supabase"
 
 // Reseñas destacadas de Google Maps
 const featuredReviews = [
@@ -26,6 +29,42 @@ const featuredReviews = [
 ]
 
 export function Reviews() {
+  const [userReviews, setUserReviews] = useState<Review[]>([])
+  const [showForm, setShowForm] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch('/api/reviews')
+      const data = await response.json()
+      if (data.reviews) {
+        setUserReviews(data.reviews)
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchReviews()
+  }, [])
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffTime = Math.abs(now.getTime() - date.getTime())
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    
+    if (diffDays === 0) return "Hoy"
+    if (diffDays === 1) return "Ayer"
+    if (diffDays < 7) return `Hace ${diffDays} días`
+    if (diffDays < 30) return `Hace ${Math.floor(diffDays / 7)} semanas`
+    if (diffDays < 365) return `Hace ${Math.floor(diffDays / 30)} meses`
+    return `Hace ${Math.floor(diffDays / 365)} años`
+  }
+
   return (
     <section className="py-24 px-4">
       <div className="max-w-7xl mx-auto">
@@ -63,49 +102,104 @@ export function Reviews() {
           </div>
         </div>
 
-        {/* Reseñas destacadas */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
-          {featuredReviews.map((review, index) => (
-            <div
-              key={index}
-              className="bg-card border border-border p-6 rounded-lg hover:shadow-lg transition-shadow"
-            >
-              {/* Estrellas */}
-              <div className="flex gap-1 mb-3">
-                {[...Array(review.rating)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="w-4 h-4 text-primary fill-primary"
-                  />
-                ))}
-              </div>
-              
-              {/* Comentario */}
-              <p className="text-foreground/80 mb-4 text-sm leading-relaxed">
-                "{review.text}"
-              </p>
-              
-              {/* Autor y fecha */}
-              <div className="flex items-center justify-between pt-4 border-t border-border">
-                <p className="font-medium text-foreground text-sm">
-                  {review.name}
+        {/* Reseñas destacadas de Google */}
+        <div className="mb-12">
+          <h3 className="font-serif text-2xl font-semibold text-foreground mb-6 text-center">
+            Reseñas Destacadas
+          </h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            {featuredReviews.map((review, index) => (
+              <div
+                key={index}
+                className="bg-card border border-border p-6 rounded-lg hover:shadow-lg transition-shadow"
+              >
+                <div className="flex gap-1 mb-3">
+                  {[...Array(review.rating)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="w-4 h-4 text-primary fill-primary"
+                    />
+                  ))}
+                </div>
+                <p className="text-foreground/80 mb-4 text-sm leading-relaxed">
+                  "{review.text}"
                 </p>
-                <p className="text-foreground/50 text-xs">
-                  {review.date}
-                </p>
+                <div className="flex items-center justify-between pt-4 border-t border-border">
+                  <p className="font-medium text-foreground text-sm">
+                    {review.name}
+                  </p>
+                  <p className="text-foreground/50 text-xs">
+                    {review.date}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* CTA para dejar reseña */}
+        {/* Reseñas de usuarios */}
+        {userReviews.length > 0 && (
+          <div className="mb-12">
+            <h3 className="font-serif text-2xl font-semibold text-foreground mb-6 text-center">
+              Comentarios de Nuestros Clientes
+            </h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {userReviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="bg-card border border-border p-6 rounded-lg hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex gap-1 mb-3">
+                    {[...Array(review.rating)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-4 h-4 text-primary fill-primary"
+                      />
+                    ))}
+                  </div>
+                  <p className="text-foreground/80 mb-4 text-sm leading-relaxed">
+                    "{review.comment}"
+                  </p>
+                  <div className="flex items-center justify-between pt-4 border-t border-border">
+                    <p className="font-medium text-foreground text-sm">
+                      {review.user_name}
+                    </p>
+                    <p className="text-foreground/50 text-xs">
+                      {formatDate(review.created_at)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Botón para mostrar formulario */}
+        <div className="text-center mb-12">
+          <Button
+            onClick={() => setShowForm(!showForm)}
+            size="lg"
+            className="px-8"
+          >
+            {showForm ? "Ocultar Formulario" : "Dejar un Comentario"}
+          </Button>
+        </div>
+
+        {/* Formulario de comentarios */}
+        {showForm && (
+          <div className="mb-12">
+            <SimpleReviewForm onReviewSubmitted={fetchReviews} />
+          </div>
+        )}
+
+        {/* CTA para Google Reviews */}
         <div className="text-center">
           <div className="bg-primary/5 border-2 border-primary/20 p-8 rounded-lg max-w-2xl mx-auto">
             <h3 className="font-serif text-2xl font-semibold text-foreground mb-4">
-              ¿Ya nos visitaste?
+              ¿Prefieres Google?
             </h3>
             <p className="text-foreground/70 mb-6">
-              Comparte tu experiencia y ayuda a otros clientes a conocer nuestro servicio
+              También puedes dejarnos una reseña en Google Maps
             </p>
             <a
               href={`https://search.google.com/local/writereview?placeid=ChIJQawSpT0JdI8RG3vAntjHgi4`}
@@ -114,6 +208,7 @@ export function Reviews() {
             >
               <Button
                 size="lg"
+                variant="outline"
                 className="px-8"
               >
                 Dejar una Reseña en Google
