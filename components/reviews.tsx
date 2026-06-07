@@ -1,23 +1,9 @@
 "use client"
 
-import { useEffect } from "react"
 import { Star } from "lucide-react"
 import { Button } from "./ui/button"
 
 export function Reviews() {
-  useEffect(() => {
-    // Cargar el script de Google Places
-    const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places`
-    script.async = true
-    script.defer = true
-    document.head.appendChild(script)
-
-    return () => {
-      document.head.removeChild(script)
-    }
-  }, [])
-
   return (
     <section className="py-24 px-4">
       <div className="max-w-7xl mx-auto">
@@ -51,29 +37,6 @@ export function Reviews() {
               <p className="text-foreground/70 text-sm">
                 Opiniones en Google
               </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Widget de Google Reviews */}
-        <div className="mb-12">
-          <div className="bg-card border border-border p-8 rounded-lg">
-            <h3 className="font-serif text-2xl font-semibold text-foreground mb-6 text-center">
-              Opiniones de Google
-            </h3>
-            
-            {/* Contenedor del widget de Google */}
-            <div className="flex justify-center">
-              <iframe
-                src={`https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=place_id:ChIJQawSpT0JdI8RG3vAntjHgi4&zoom=15`}
-                width="100%"
-                height="450"
-                style={{ border: 0, maxWidth: '800px' }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="rounded-lg"
-              />
             </div>
           </div>
         </div>
