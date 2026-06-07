@@ -1,4 +1,9 @@
-# 🔧 Solución: Error en Comentarios con Google
+Opción 1: Configurar Google OAuth (Más profesional pero complejo)
+Requiere crear proyecto en Google Cloud Console
+Configurar credenciales OAuth
+Habilitar en Supabase
+✅ Autenticación real con Google
+✅ Fotos de perfil automáticas# 🔧 Solución: Error en Comentarios con Google
 
 ## ❌ Problema Identificado
 
